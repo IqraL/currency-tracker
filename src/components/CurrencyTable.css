@@ -1,0 +1,29 @@
+.currency_table_body {
+  background-color: "#424242";
+  display: grid;
+  max-width: 500px;
+}
+
+.currency_table_row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-content: center;
+  border: 1px solid crimson;
+  height: 50px;
+  background-color: crimson;
+  border-radius: 15px;
+  margin-bottom: 10px;
+  font-size: x-large;
+  font-family: cursive;
+  text-transform: capitalize;
+}
+
+.currency_table_curr_cell {
+  display: grid;
+  align-content: center;
+  height: inherit;
+}
+
+.currency_table_curr_name {
+  border-right: 5px solid black;
+}
