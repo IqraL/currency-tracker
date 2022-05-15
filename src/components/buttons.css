@@ -1,0 +1,10 @@
+.button_design_one {
+  display: grid;
+  align-content: center;
+  background-color: purple;
+  color: white;
+  border: 1px solid purple;
+  border-radius: 100px;
+  margin-right: 5px;
+  cursor: pointer;
+}

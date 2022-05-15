@@ -7,16 +7,16 @@ import React, {
   useState,
 } from "react";
 import { io, Socket } from "socket.io-client";
-import { CURRENCIES } from "../consts";
+import { BUTTON_DESIGN_ONE, CURRENCIES } from "../consts";
 import { CurrencyTable } from "./CurrencyTable";
 import { sortData } from "../helpers/sort";
 import { SortDirectionType, TypesOfSorts } from "../types/sort";
 import { CurrencyTableDataType } from "../types/allTypes";
 import { SortBar } from "./SortBar";
 
-const currenciesDisplayRefs = CURRENCIES.map((currencny) => {
+const currenciesDisplayRefs = CURRENCIES.map((currency) => {
   return {
-    code: currencny,
+    code: currency,
     ref: createRef<HTMLDivElement | null>(),
   };
 });
@@ -25,6 +25,18 @@ const appWrapperStyle = {
   backgroundColor: "rgb(32 32 32)",
   display: "grid",
   justifyContent: "center",
+  gridRowGap: "32.5px",
+  paddingTop: "40px",
+};
+
+const headerStyle = {
+  height: "100px",
+  backgroundColor: "crimson",
+  fontSize: "xxx-large",
+  display: "grid",
+  alignItems: "center",
+  fontFamily: "emoji",
+  color: "white",
 };
 
 export const getSortedData = (
@@ -115,13 +127,25 @@ export const Tracker = () => {
   );
 
   return (
-    <div style={appWrapperStyle}>
-      <SortBar onNewSortParams={updateSortParams} />
-      <CurrencyTable currenciesDisplayRefs={sortedData} />
-    </div>
+    <>
+      <div style={headerStyle} className={"header"}>
+        Crypto Tracker
+      </div>
+
+      <div style={appWrapperStyle}>
+        <SortBar
+          onNewSortParams={updateSortParams}
+          buttonDesignClass={BUTTON_DESIGN_ONE}
+        />
+
+        <CurrencyTable currenciesDisplayRefs={sortedData} />
+      </div>
+    </>
   );
 };
 
+//Higher order component for button bars
+//  <div>Hide No Data </div>
 {
   /* <input
 type="number"

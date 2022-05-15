@@ -99,3 +99,5 @@ export const CURRENCIES = [
   "bancor",
   "kadena",
 ];
+
+export const BUTTON_DESIGN_ONE = "button_design_one";

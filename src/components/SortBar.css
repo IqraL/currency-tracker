@@ -1,0 +1,11 @@
+.sortBar {
+  display: grid;
+  grid-template-columns: 4fr 4fr 1fr 1fr;
+  max-width: 500px;
+  height: 50px;
+  font-size: large;
+}
+
+.sortBar_direction {
+  font-size: xx-large;
+}

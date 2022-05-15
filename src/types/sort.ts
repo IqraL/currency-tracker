@@ -7,7 +7,7 @@ export enum TypesOfSorts {
 
 export enum SortDirectionType {
   descending = "descending",
-  asccending = "ascending",
+  ascending = "ascending",
 }
 
 export type SortDetails = {
