@@ -1,9 +1,18 @@
-import React, { createRef, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  createRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { io, Socket } from "socket.io-client";
 import { CURRENCIES } from "../consts";
 import { CurrencyTable } from "./CurrencyTable";
 import { sortData } from "../helpers/sort";
 import { SortDirectionType, TypesOfSorts } from "../types/sort";
+import { CurrencyTableDataType } from "../types/allTypes";
+import { SortBar } from "./SortBar";
 
 const currenciesDisplayRefs = CURRENCIES.map((currencny) => {
   return {
@@ -18,6 +27,18 @@ const appWrapperStyle = {
   justifyContent: "center",
 };
 
+export const getSortedData = (
+  sortType: TypesOfSorts,
+  sortDirection: SortDirectionType
+) => {
+  return sortData({
+    data: currenciesDisplayRefs,
+    sortDetails: {
+      sortType,
+      sortDirection,
+    },
+  });
+};
 export const Tracker = () => {
   const wsClient = useRef<Socket | null>(null);
   const [openWsConnection, setOpenWsConnection] = useState(true);
@@ -27,11 +48,15 @@ export const Tracker = () => {
   const arrayOfRefMapsForCurrenctTable = useRef(currenciesDisplayRefs);
 
   const [currenciesWithData, setCurrenciesWithData] = useState<String[]>([]);
+  const [reRunSort, setReRunSort] = useState<boolean>(false);
 
-  const [sortType, setSortType] = useState<TypesOfSorts>(TypesOfSorts.price);
-  const [sortDirection, setSortDirection] = useState<SortDirectionType>(
-    SortDirectionType.descending
-  );
+  const [sortParams, setSortParams] = useState<{
+    sortType: TypesOfSorts;
+    sortDirection: SortDirectionType;
+  }>({
+    sortType: TypesOfSorts.price,
+    sortDirection: SortDirectionType.descending,
+  });
 
   useEffect(() => {
     if (openWsConnection) {
@@ -48,6 +73,7 @@ export const Tracker = () => {
           )
         ) {
           setCurrenciesWithData([...currenciesWithData, ...currenciesToUpdate]);
+          setReRunSort(true);
         }
 
         currenciesToUpdate.forEach((currency, i) => {
@@ -74,54 +100,40 @@ export const Tracker = () => {
   }, [currenciesWithData, openWsConnection]);
 
   const sortedData = useMemo(() => {
-    return sortData({
-      data: currenciesDisplayRefs,
-      sortDetails: {
-        sortType: sortType,
-        sortDirection: sortDirection,
-      },
-    });
-  }, [sortType, sortDirection, currenciesWithData.length]);
+    if (reRunSort) {
+      setReRunSort(false);
+    }
+    return getSortedData(sortParams.sortType, sortParams.sortDirection);
+  }, [sortParams, reRunSort]);
+
+  const updateSortParams = useCallback(
+    (sortType: TypesOfSorts, sortDirection: SortDirectionType) => {
+      setSortParams({ sortType, sortDirection });
+      setReRunSort(true);
+    },
+    []
+  );
 
   return (
     <div style={appWrapperStyle}>
-      <input
-        type="number"
-        min="1"
-        max="4"
-        onChange={(e) => {
-          const num = Number(e.target.value) - 1;
-          setcurrenciesToDisplay(CURRENCIES.slice(0, num));
-          console.log(e.target.value);
-        }}
-      />
-      <button onClick={() => setOpenWsConnection(!openWsConnection)}>
-        connection {`${openWsConnection}`}
-      </button>
+      <SortBar onNewSortParams={updateSortParams} />
       <CurrencyTable currenciesDisplayRefs={sortedData} />
     </div>
   );
 };
 
-export const SortBar = () => {
-  return (
-    <div>
-      <div onClick={() => setSortType(TypesOfSorts.price)}>Sort by Price</div>
-      <div onClick={() => setSortType(TypesOfSorts.alphabetical)}>
-        Sort Aphabetically
-      </div>
-      <div
-        style={{ color: "white" }}
-        onClick={() => setSortDirection(SortDirectionType.descending)}
-      >
-        ↓
-      </div>
-      <div
-        style={{ color: "white" }}
-        onClick={() => setSortDirection(SortDirectionType.asccending)}
-      >
-        ↑
-      </div>{" "}
-    </div>
-  );
-};
+{
+  /* <input
+type="number"
+min="1"
+max="4"
+onChange={(e) => {
+  const num = Number(e.target.value) - 1;
+  setcurrenciesToDisplay(CURRENCIES.slice(0, num));
+  console.log(e.target.value);
+}}
+/>
+<button onClick={() => setOpenWsConnection(!openWsConnection)}>
+connection {`${openWsConnection}`}
+</button> */
+}
