@@ -73,7 +73,10 @@ export const Tracker = () => {
   useEffect(() => {
     if (openWsConnection) {
       // Change to env var at end;
-      wsClient.current = io("ws://localhost:4000", { autoConnect: false });
+      wsClient.current = io("https://currency-api-alpha.herokuapp.com", {
+        autoConnect: false,
+      });
+      // wsClient.current = io("ws://localhost:5000", { autoConnect: false });
       wsClient.current.open();
       wsClient.current.on("currencyData", (data: string) => {
         const parsedData = JSON.parse(JSON.stringify(JSON.parse(data)));

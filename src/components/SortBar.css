@@ -4,6 +4,7 @@
   max-width: 500px;
   height: 50px;
   font-size: large;
+  font-family: emoji;
 }
 
 .sortBar_direction {
