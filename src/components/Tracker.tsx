@@ -31,7 +31,7 @@ const appWrapperStyle = {
 
 const headerStyle = {
   height: "100px",
-  backgroundColor: "crimson",
+  backgroundColor: "rgb(32 32 32)",
   fontSize: "xxx-large",
   display: "grid",
   alignItems: "center",
